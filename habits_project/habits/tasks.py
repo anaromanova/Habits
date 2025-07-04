@@ -7,6 +7,7 @@ from .services import send_telegram_message
 def send_reminders():
     now = timezone.localtime()
     due = Habit.objects.filter(time__hour=now.hour, time__minute=now.minute)
+    due = due.select_related('user').exclude(user__telegram_chat_id__isnull=True)
     for habit in due:
         chat_id = getattr(habit.user.profile, 'telegram_chat_id', None)
         if chat_id:
