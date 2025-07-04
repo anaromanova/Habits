@@ -87,6 +87,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # CORS
 CORS_ALLOWED_ORIGINS = [
     'https://your-frontend-domain.com',
