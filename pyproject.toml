@@ -1,14 +1,39 @@
 [tool.poetry]
-name = "habits-project"
+name = "habits"
 version = "0.1.0"
-description = ""
-authors = ["AnastasiaR <anastasia.romanova3169@gmail.com>"]
+description = "Сервис для трекинга привычек с напоминаниями в Telegram"
+authors = ["anastasia.romanova3169@gmail.com>"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
+Django = "^4.2"
+aiogram = "^3.0.0"
+celery = "^5.5"
+django-celery-beat = "^2.8.1"
+redis = "^4.5"
+django-cors-headers = "^4.1"
+psycopg2-binary = "^2.9.10"
+gunicorn = "^20.1.0"
+python-dotenv = "^1.1.1"
+djangorestframework = "^3.16.0"
+drf-yasg = "^1.21.10"
+python-telegram-bot = "^22.2"
 
+[tool.poetry.group.dev]
+optional = false
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^6.2"
+flake8 = "^6.0"
+black = "^24.1"
+isort = "^5.12"
+
+[tool.poetry.scripts]
+manage = "project.manage:main"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.4.0"]
 build-backend = "poetry.core.masonry.api"
+
