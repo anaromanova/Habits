@@ -105,6 +105,8 @@ REST_FRAMEWORK = {
 
 # Telegram & Celery
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+CELERY_BROKER_URL = f'{REDIS_URL}/0'
+CELERY_BACKEND_URL = f'{REDIS_URL}/0'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
