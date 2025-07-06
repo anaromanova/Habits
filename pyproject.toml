@@ -16,6 +16,8 @@ redis = "^4.5"
 django-cors-headers = "^4.1"
 psycopg2-binary = "^2.9.10"
 gunicorn = "^20.1.0"
+python-dotenv = "^1.1.1"
+djangorestframework = "^3.16.0"
 
 [tool.poetry.group.dev]
 optional = false
