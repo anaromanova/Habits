@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(BASE_DIR / '.env')
@@ -109,3 +110,11 @@ CELERY_BROKER_URL = f'{REDIS_URL}/0'
 CELERY_BACKEND_URL = f'{REDIS_URL}/0'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CELERY_BEAT_SCHEDULE = {
+    'send-habit-reminders-every-minute': {
+        'task': 'habits_project.habits.tasks.send_habit_reminders',
+        'schedule': crontab(minute='*'),  # каждую минуту
+    },
+}

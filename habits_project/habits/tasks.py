@@ -1,18 +1,47 @@
+# habits/tasks.py
 from celery import shared_task
 from django.utils import timezone
+from django.conf import settings
+from telegram import Bot
+
 from .models import Habit
 
 @shared_task
-def send_reminders():
+def send_habit_reminders():
+    """
+    Каждую минуту выбираем привычки, у которых поле `time`
+    совпадает с текущим часом и минутой, и отправляем напоминание
+    в чат, указанный в профиле пользователя.
+    """
     now = timezone.localtime()
-    due_qs = (
-        Habit.objects
-        .filter(time__hour=now.hour, time__minute=now.minute)
-        .select_related('user')
-        .exclude(user__telegram_chat_id__isnull=True)
-    )
+    hour = now.hour
+    minute = now.minute
 
-    for habit in due_qs:
-        chat_id = habit.user.telegram_chat_id
-        # отправляем напоминание
-        bot.send_message(chat_id=chat_id, text=f"Пора выполнить: {habit.title}")
+    bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
+    sent_count = 0
+
+    qs = Habit.objects.filter(
+        time__hour=hour,
+        time__minute=minute,
+        is_reward=False,
+    ).select_related('user', 'user__profile')
+
+    for habit in qs:
+        profile = getattr(habit.user, 'profile', None)
+        chat_id = getattr(profile, 'telegram_chat_id', None)
+        if not chat_id:
+            continue
+
+        text = (
+            f"🔔 Напоминание о привычке:\n"
+            f"• Действие: {habit.action}\n"
+            f"• Время: {habit.time.strftime('%H:%M')}\n"
+            f"• Место: {habit.place}"
+        )
+        try:
+            bot.send_message(chat_id=chat_id, text=text)
+            sent_count += 1
+        except Exception:
+            continue
+
+    return f"Sent {sent_count} reminders at {hour:02d}:{minute:02d}"
