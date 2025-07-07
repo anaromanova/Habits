@@ -1,0 +1,68 @@
+name: CI & Deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        ports: ['5432:5432']
+      redis:
+        image: redis:6
+        ports: ['6379:6379']
+    env:
+      DATABASE_URL: postgres://...  # собираем из секретов
+      REDIS_URL: redis://localhost:6379/0
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-dev
+      - name: Run linters
+        run: poetry run flake8 .
+      - name: Run tests
+        run: poetry run pytest --maxfail=1 --disable-warnings -q
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker images
+        run: docker-compose -f docker-compose.prod.yml build
+      - name: Push to registry
+        run: |
+          docker tag web your-registry/your-image:latest
+          docker push your-registry/your-image:latest
+      # если не пушим в Docker Hub — этот шаг можно пропустить и сразу деплоить на сервер
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /srv/habits-project
+            git pull origin develop
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d
+            systemctl restart habits
