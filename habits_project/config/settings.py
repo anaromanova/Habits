@@ -89,6 +89,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # CORS
 CORS_ALLOWED_ORIGINS = [
     'https://your-frontend-domain.com',
