@@ -23,7 +23,7 @@ services:
 
   web:
     build: .
-    env_file:            # только здесь подтягиваем .env
+    env_file:
       - .env
     depends_on:
       db:
