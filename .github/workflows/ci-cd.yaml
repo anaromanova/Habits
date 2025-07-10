@@ -16,9 +16,6 @@ jobs:
           python-version: '3.x'
       - uses: snok/install-poetry@v1
       - run: poetry install --no-root
-      - name: Apply migrations
-        run: |
-          poetry run python manage.py migrate --noinput
       - name: Run Django tests
         run: poetry run python manage.py test
 
