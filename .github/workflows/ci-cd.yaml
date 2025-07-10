@@ -69,7 +69,9 @@ jobs:
           script: |
             set -e
             cd /home/${{ secrets.SERVER_USER }}/Habits
-            git pull origin develop
+            git fetch origin develop
+            git checkout develop
+            git reset --hard origin/develop
             docker-compose pull
             docker-compose up -d --remove-orphans
 
