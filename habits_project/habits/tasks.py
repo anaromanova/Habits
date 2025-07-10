@@ -1,10 +1,11 @@
 # habits/tasks.py
 from celery import shared_task
-from django.utils import timezone
 from django.conf import settings
+from django.utils import timezone
 from telegram import Bot
 
 from .models import Habit
+
 
 @shared_task
 def send_habit_reminders():
@@ -24,11 +25,11 @@ def send_habit_reminders():
         time__hour=hour,
         time__minute=minute,
         is_reward=False,
-    ).select_related('user', 'user__profile')
+    ).select_related("user", "user__profile")
 
     for habit in qs:
-        profile = getattr(habit.user, 'profile', None)
-        chat_id = getattr(profile, 'telegram_chat_id', None)
+        profile = getattr(habit.user, "profile", None)
+        chat_id = getattr(profile, "telegram_chat_id", None)
         if not chat_id:
             continue
 
