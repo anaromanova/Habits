@@ -1,3 +1,6 @@
-from django.test import TestCase
+from django.test import SimpleTestCase
 
-# Create your tests here.
+class SmokeTest(SimpleTestCase):
+    def test_dummy(self):
+        """Просто проверка, что тестовый раннер работает."""
+        self.assertTrue(True)
