@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - develop
-
+env:
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test
+  POSTGRES_DB: test
+  POSTGRES_HOST: db
+  POSTGRES_PORT: 5432
+  
 jobs:
   test:
     name: ✅ Run tests
