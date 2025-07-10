@@ -183,24 +183,25 @@ docker-compose down -v
    git clone https://github.com/anaromanova/Habits.git
    cd Habits
    git checkout develop
-Установить зависимости
-
-
+2. **Установить зависимости**
+```ini
 poetry install
-Задать переменные окружения
-Создайте файл .env в корне проекта, скопировав шаблон:
-
-
+```
+3. **Задать переменные окружения**
+Создайте файл `.env` в корне проекта, скопировав шаблон:
+```ini
 cp .env.example .env
+```
 и заполните его реальными значениями
 
-Применить миграции и запустить
+4. **Применить миграции и запустить**
 
-
+```ini
 poetry run python manage.py migrate
 poetry run python manage.py createsuperuser
 poetry run python manage.py runserver
 Откройте в браузере: http://127.0.0.1:8000/
+```
 
 ## Развёртывание на удалённом сервере
 Мы используем виртуальную машину в Яндекс.Облаке с Ubuntu 24.04, Docker и Docker-Compose.
@@ -217,43 +218,48 @@ poetry run python manage.py runserver
 
 Подключиться по SSH
 
-
+```ini
 ssh ubuntu@89.169.172.251
+```
 Установить Docker & docker-compose
 
-
+```ini
 sudo apt update && sudo apt install -y docker.io docker-compose
 sudo usermod -aG docker $USER
+```
 Клонировать репозиторий и собрать контейнеры
 
-
+```ini
 git clone https://github.com/anaromanova/Habits.git
 cd Habits
 git checkout develop
 cp .env.example .env    # и заполнить переменные
 docker-compose up -d --build
+```
 Проверить статус контейнеров
 
-
+```ini
 docker ps
+```
 Вы должны видеть сервисы: habits_web, habits_db, habits_redis, habits_worker, habits_beat.
 
 Применить миграции и создать супер-юзера
 
-
+```ini
 docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser
+```
 Адрес продакшен-сервера
 Ваше приложение доступно по адресу:
-
+```ini
 http://89.169.172.251/
-
+```
 Админка:
-
+```ini
 http://89.169.172.251/admin/
-
+```
 CI/CD с GitHub Actions
-В папке .github/workflows/ci-cd.yml настроен pipeline:
+В папке ```.github/workflows/ci-cd.yml``` настроен pipeline:
 
 Trigger: push в ветку develop
 
@@ -280,14 +286,18 @@ Actions → CI/CD → Run workflow.
 # Полезные команды
 
 # Локально
+```ini
 poetry run pytest
 poetry run python manage.py test
+```
 
 # В Docker
+```ini
 docker-compose build
 docker-compose up -d
 docker-compose logs -f        # следить за логами
 docker-compose exec web bash  # зайти внутрь контейнера
+```
 Важно: не забудьте хранить все секреты (SSH-ключи, API- токены, пароли) в GitHub Secrets или в переменных окружения сервера, а .env не коммитить в репозиторий.
 
 .env
