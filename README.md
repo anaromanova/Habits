@@ -185,38 +185,24 @@ docker-compose down -v
    git checkout develop
 Установить зависимости
 
-bash
-Копировать
-Редактировать
+
 poetry install
 Задать переменные окружения
 Создайте файл .env в корне проекта, скопировав шаблон:
 
-bash
-Копировать
-Редактировать
-cp .env.example .env
-и заполните его реальными значениями:
 
-dotenv
-Копировать
-Редактировать
-SECRET_KEY=ваш_секретный_ключ
-DEBUG=True
-DATABASE_URL=postgres://user:pass@localhost:5432/habits_db
-REDIS_URL=redis://localhost:6379/0
-TELEGRAM_BOT_TOKEN=7709127545:AAhagmJKD9vq-Ui9osBk94_jCg4aQpK5ssc
+cp .env.example .env
+и заполните его реальными значениями
+
 Применить миграции и запустить
 
-bash
-Копировать
-Редактировать
+
 poetry run python manage.py migrate
 poetry run python manage.py createsuperuser
 poetry run python manage.py runserver
 Откройте в браузере: http://127.0.0.1:8000/
 
-Развёртывание на удалённом сервере
+## Развёртывание на удалённом сервере
 Мы используем виртуальную машину в Яндекс.Облаке с Ubuntu 24.04, Docker и Docker-Compose.
 
 Создать ВМ в Yandex Cloud
@@ -231,22 +217,16 @@ poetry run python manage.py runserver
 
 Подключиться по SSH
 
-bash
-Копировать
-Редактировать
+
 ssh ubuntu@89.169.172.251
 Установить Docker & docker-compose
 
-bash
-Копировать
-Редактировать
+
 sudo apt update && sudo apt install -y docker.io docker-compose
 sudo usermod -aG docker $USER
 Клонировать репозиторий и собрать контейнеры
 
-bash
-Копировать
-Редактировать
+
 git clone https://github.com/anaromanova/Habits.git
 cd Habits
 git checkout develop
@@ -254,17 +234,13 @@ cp .env.example .env    # и заполнить переменные
 docker-compose up -d --build
 Проверить статус контейнеров
 
-bash
-Копировать
-Редактировать
+
 docker ps
 Вы должны видеть сервисы: habits_web, habits_db, habits_redis, habits_worker, habits_beat.
 
 Применить миграции и создать супер-юзера
 
-bash
-Копировать
-Редактировать
+
 docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser
 Адрес продакшен-сервера
@@ -297,14 +273,12 @@ Push образа в GitHub Package Registry (или Docker Hub)
 
 Деплой на сервер через SSH (docker-compose pull && docker-compose up -d)
 
-Запуск вручную
+## Запуск вручную
 При необходимости вы можете запустить workflow вручную на GitHub:
 Actions → CI/CD → Run workflow.
 
-Полезные команды
-bash
-Копировать
-Редактировать
+# Полезные команды
+
 # Локально
 poetry run pytest
 poetry run python manage.py test
@@ -316,9 +290,6 @@ docker-compose logs -f        # следить за логами
 docker-compose exec web bash  # зайти внутрь контейнера
 Важно: не забудьте хранить все секреты (SSH-ключи, API- токены, пароли) в GitHub Secrets или в переменных окружения сервера, а .env не коммитить в репозиторий.
 
-text
-Копировать
-Редактировать
 .env
 .idea/
 __pycache__/
