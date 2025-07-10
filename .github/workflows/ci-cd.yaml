@@ -68,7 +68,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             set -e
-            cd /home/${{ secrets.SERVER_USER }}/habits
+            cd /home/${{ secrets.SERVER_USER }}/Habits
             git pull origin develop
             docker-compose pull
             docker-compose up -d --remove-orphans
