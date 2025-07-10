@@ -72,6 +72,6 @@ jobs:
             git fetch origin develop
             git checkout develop
             git reset --hard origin/develop
-            docker-compose pull
-            docker-compose up -d --remove-orphans
+            docker compose pull
+            docker compose up -d --remove-orphans
 
