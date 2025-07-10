@@ -62,7 +62,7 @@ WSGI_APPLICATION = 'habits_project.config..wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("POSTGRES_NAME"),
+        "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
         "HOST": os.getenv("POSTGRES_HOST"),
@@ -89,6 +89,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # CORS
 CORS_ALLOWED_ORIGINS = [
     'https://your-frontend-domain.com',
@@ -106,8 +110,8 @@ REST_FRAMEWORK = {
 # Telegram & Celery
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
-CELERY_BROKER_URL = f'{REDIS_URL}/0'
-CELERY_BACKEND_URL = f'{REDIS_URL}/0'
+CELERY_BROKER_URL = {REDIS_URL}
+CELERY_BACKEND_URL = {REDIS_URL}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
