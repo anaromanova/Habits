@@ -12,9 +12,35 @@ env:
   POSTGRES_PORT: 5432
   
 jobs:
+  lint:
+      name: 🛠 Lint code
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+  
+        - name: Setup Python
+          uses: actions/setup-python@v4
+          with:
+            python-version: 3.10
+  
+        - name: Install Poetry
+          uses: snok/install-poetry@v1
+          with:
+            poetry-version: latest
+  
+        - name: Install dependencies (with dev)
+          run: poetry install --no-root
+  
+        - name: Run flake8
+          run: poetry run flake8
+  
+        - name: Check formatting with Black
+          run: poetry run black --check .
   test:
     name: ✅ Run tests
     runs-on: ubuntu-latest
+    needs: lint
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
